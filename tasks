@@ -93,3 +93,128 @@ sh: sudo: not found
 root
 / # cat /etc/passwd | grep akshay
 
+
+BUSYBOX IMAGE
+
+
+Step 1: Pull BusyBox
+docker pull busybox:latest
+
+Step 2: Compare Image Sizes
+docker images
+
+Step 3: Run BusyBox Container
+docker run -it --name busybox-test busybox sh
+
+cat /etc/os-release
+busybox
+ls /
+whoami
+mkdir /lab
+echo "BusyBox Test" > /lab/test.txt
+cat /lab/test.txt
+adduser abhi
+
+
+OUTPUT 
+
+
+akshay@akshay:~/docker-compose-tasks$ docker images
+permission denied while trying to connect to the docker API at unix:///var/run/docker.sock
+akshay@akshay:~/docker-compose-tasks$ sudo docker images
+[sudo] password for akshay:
+                                                                                                                      i Info →   U  In Use
+IMAGE           ID             DISK USAGE   CONTENT SIZE   EXTRA
+alpine:latest   28bd5fe8b56d         13MB         3.93MB    U
+akshay@akshay:~/docker-compose-tasks$ docker pull busybox:latest
+permission denied while trying to connect to the docker API at unix:///var/run/docker.sock
+akshay@akshay:~/docker-compose-tasks$ ^C
+akshay@akshay:~/docker-compose-tasks$ groups
+akshay adm cdrom sudo dip plugdev lxd
+akshay@akshay:~/docker-compose-tasks$ sudo usermod -aG docker $USER
+akshay@akshay:~/docker-compose-tasks$ docker pull busybox:latest
+permission denied while trying to connect to the docker API at unix:///var/run/docker.sock
+akshay@akshay:~/docker-compose-tasks$ newgrp docker
+akshay@akshay:~/docker-compose-tasks$ groups
+docker adm cdrom sudo dip plugdev lxd akshay
+akshay@akshay:~/docker-compose-tasks$ docker images
+                                                                                                                      i Info →   U  In Use
+IMAGE           ID             DISK USAGE   CONTENT SIZE   EXTRA
+alpine:latest   28bd5fe8b56d         13MB         3.93MB    U
+akshay@akshay:~/docker-compose-tasks$ docker pull busybox:latest
+latest: Pulling from library/busybox
+b05093807bb0: Pull complete
+7270b3e1860c: Download complete
+Digest: sha256:dc2d74b28e4cf8984fa52af1f39bc7c3d9c73760b41a74d629f5d11b1ab28616
+Status: Downloaded newer image for busybox:latest
+docker.io/library/busybox:latest
+akshay@akshay:~/docker-compose-tasks$ docker images
+                                                                                                                      i Info →   U  In Use
+IMAGE            ID             DISK USAGE   CONTENT SIZE   EXTRA
+alpine:latest    28bd5fe8b56d         13MB         3.93MB    U
+busybox:latest   dc2d74b28e4c       6.81MB         2.23MB
+akshay@akshay:~/docker-compose-tasks$ docker run -it --name busybox-test busybox sh
+/ # cat /etc/os-release
+cat: can't open '/etc/os-release': No such file or directory
+/ # busybox
+BusyBox v1.38.0 (2026-05-13 02:21:49 UTC) multi-call binary.
+BusyBox is copyrighted by many authors between 1998-2015.
+Licensed under GPLv2. See source distribution for detailed
+copyright notices.
+
+Usage: busybox [function [arguments]...]
+   or: busybox --list[-full]
+   or: busybox --show SCRIPT
+   or: busybox --install [-s] [DIR]
+   or: function [arguments]...
+
+        BusyBox is a multi-call binary that combines many common Unix
+        utilities into a single executable.  Most people will create a
+        link to busybox for each function they wish to use and BusyBox
+        will act like whatever it was invoked as.
+
+Currently defined functions:
+        [, [[, acpid, add-shell, addgroup, adduser, adjtimex, ar, arch, arp, arping, ascii, ash, awk, base32, base64, basename, bc, beep,
+        blkdiscard, blkid, blockdev, bootchartd, brctl, bunzip2, bzcat, bzip2, cal, cat, chat, chattr, chgrp, chmod, chown, chpasswd,
+        chpst, chroot, chrt, chvt, cksum, clear, cmp, comm, conspy, cp, cpio, crc32, crond, crontab, cryptpw, cttyhack, cut, date, dc,
+        dd, deallocvt, delgroup, deluser, depmod, devmem, df, dhcprelay, diff, dirname, dmesg, dnsd, dnsdomainname, dos2unix, dpkg,
+        dpkg-deb, du, dumpkmap, dumpleases, echo, ed, egrep, eject, env, envdir, envuidgid, ether-wake, expand, expr, factor, fakeidentd,
+        fallocate, false, fatattr, fbset, fbsplash, fdflush, fdformat, fdisk, fgconsole, fgrep, find, findfs, flock, fold, free,
+        freeramdisk, fsck, fsck.minix, fsfreeze, fstrim, fsync, ftpd, ftpget, ftpput, fuser, getfattr, getopt, getty, grep, groups,
+        gunzip, gzip, halt, hd, hdparm, head, hexdump, hexedit, hostid, hostname, httpd, hush, hwclock, i2cdetect, i2cdump, i2cget,
+        i2cset, i2ctransfer, id, ifconfig, ifdown, ifenslave, ifplugd, ifup, inetd, init, inotifyd, insmod, install, ionice, iostat, ip,
+        ipaddr, ipcalc, ipcrm, ipcs, iplink, ipneigh, iproute, iprule, iptunnel, kbd_mode, kill, killall, killall5, klogd, last, less,
+        link, linux32, linux64, linuxrc, ln, loadfont, loadkmap, logger, login, logname, logread, losetup, lpd, lpq, lpr, ls, lsattr,
+        lsblk, lsmod, lsof, lspci, lsscsi, lsusb, lzcat, lzma, lzop, makedevs, makemime, man, md5sum, mdev, mesg, microcom, mim, mkdir,
+        mkdosfs, mke2fs, mkfifo, mkfs.ext2, mkfs.minix, mkfs.vfat, mknod, mkpasswd, mkswap, mktemp, modinfo, modprobe, more, mount,
+        mountpoint, mpstat, mt, mv, nameif, nanddump, nandwrite, nbd-client, nc, netstat, nice, nl, nmeter, nohup, nologin, nproc,
+        nsenter, nslookup, ntpd, od, openvt, partprobe, passwd, paste, patch, pgrep, pidof, ping, ping6, pipe_progress, pivot_root,
+        pkill, pmap, popmaildir, poweroff, powertop, printenv, printf, ps, pscan, pstree, pwd, pwdx, raidautorun, rdate, rdev, readahead,
+        readlink, readprofile, realpath, reboot, reformime, remove-shell, renice, reset, resize, resume, rev, rm, rmdir, rmmod, route,
+        rpm, rpm2cpio, rtcwake, run-init, run-parts, runlevel, runsv, runsvdir, rx, script, scriptreplay, sed, seedrng, sendmail, seq,
+        setarch, setconsole, setfattr, setfont, setkeycodes, setlogcons, setpriv, setserial, setsid, setuidgid, sh, sha1sum, sha256sum,
+        sha384sum, sha3sum, sha512sum, showkey, shred, shuf, slattach, sleep, smemcap, softlimit, sort, split, ssl_client, ssl_server,
+        start-stop-daemon, stat, strings, stty, su, sulogin, sum, sv, svc, svlogd, svok, swapoff, swapon, switch_root, sync, sysctl,
+        syslogd, tac, tail, tar, taskset, tc, tcpsvd, tee, telnet, telnetd, test, tftp, tftpd, time, timeout, top, touch, tr, traceroute,
+        traceroute6, tree, true, truncate, ts, tsort, tty, ttysize, tunctl, ubiattach, ubidetach, ubimkvol, ubirename, ubirmvol,
+        ubirsvol, ubiupdatevol, udhcpc, udhcpc6, udhcpd, udpsvd, uevent, umount, uname, unexpand, uniq, unix2dos, unlink, unlzma,
+        unshare, unxz, unzip, uptime, users, usleep, uudecode, uuencode, uuidgen, vconfig, vi, vlock, vmstat, volname, w, wall, watch,
+        watchdog, wc, wget, which, who, whoami, whois, xargs, xxd, xz, xzcat, yes, zcat, zcip
+/ # ls /
+bin    dev    etc    home   lib    lib64  proc   root   sys    tmp    usr    var
+/ # whoami
+root
+/ # mkdir /lab
+/ # ls /
+bin    dev    etc    home   lab    lib    lib64  proc   root   sys    tmp    usr    var
+/ # echo "BusyBox Test" > /lab/test.txt
+/ # cat /lab/test.txt
+BusyBox Test
+/ # adduser abhi
+Changing password for abhi
+New password:
+Bad password: too many similar characters
+Retype password:
+Passwords don't match
+passwd: password for abhi is unchanged
+/ # exit
