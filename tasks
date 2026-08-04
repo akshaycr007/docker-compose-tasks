@@ -655,3 +655,187 @@ appuser
 root@b3dd338bcd60:/# exit
 exit
 
+-----------------------------------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------------------------
+image push to Dockerhub and pull to another vm 
+
+vm1
+
+step1 
+docker login 
+
+step2 
+docker images
+(find image)
+
+step3 
+docker push akshay852/project:v1
+
+vm2 
+
+step1
+docker login 
+
+step2 
+docker pull akshay852/project:v1
+
+step3 
+docker images
+
+step4
+docker run -d --name project-test -p 8080:80 akshay852/project:v1
+
+step5 
+curl localhost:8080
+
+step6
+docker exec -it project-test bash
+
+inside 
+id appuser
+ls -R /app
+ls /home
+ls -R /app
+cat /var/www/html/index.html
+
+
+OUTPUT
+
+VM1
+
+akshay@akshay:~/docker-compose-tasks$ docker login -u akshay852
+
+i Info → A Personal Access Token (PAT) can be used instead.
+         To create a PAT, visit https://app.docker.com/settings
+
+
+Password:
+Error response from daemon: Get "https://registry-1.docker.io/v2/": net/http: TLS handshake timeout
+akshay@akshay:~/docker-compose-tasks$ docker login -u akshay852
+
+i Info → A Personal Access Token (PAT) can be used instead.
+         To create a PAT, visit https://app.docker.com/settings
+
+
+Password:
+
+WARNING! Your credentials are stored unencrypted in '/home/akshay/.docker/config.json'.
+Configure a credential helper to remove this warning. See
+https://docs.docker.com/go/credential-store/
+
+Login Succeeded
+akshay@akshay:~/docker-compose-tasks$ docker images
+                                                                                                                      i Info →   U  In Use
+IMAGE            ID             DISK USAGE   CONTENT SIZE   EXTRA
+alpine:latest    28bd5fe8b56d         13MB         3.93MB    U
+busybox:latest   dc2d74b28e4c       6.81MB         2.23MB    U
+debian:12-slim   7b140f374b28        116MB         30.6MB
+nginx:alpine     4a73073bd557       93.6MB           27MB    U
+project:v1       c8cf3d32565b        171MB         49.5MB    U
+ubuntu:24.04     561618e2c15b        119MB         31.7MB    U
+akshay@akshay:~/docker-compose-tasks$ docker tag project:v1 akshay852/project:v1
+akshay@akshay:~/docker-compose-tasks$ docker images
+                                                                                                                      i Info →   U  In Use
+IMAGE                  ID             DISK USAGE   CONTENT SIZE   EXTRA
+akshay852/project:v1   c8cf3d32565b        171MB         49.5MB    U
+alpine:latest          28bd5fe8b56d         13MB         3.93MB    U
+busybox:latest         dc2d74b28e4c       6.81MB         2.23MB    U
+debian:12-slim         7b140f374b28        116MB         30.6MB
+nginx:alpine           4a73073bd557       93.6MB           27MB    U
+project:v1             c8cf3d32565b        171MB         49.5MB    U
+ubuntu:24.04           561618e2c15b        119MB         31.7MB    U
+akshay@akshay:~/docker-compose-tasks$ docker push akshay852/project:v1
+The push refers to repository [docker.io/akshay852/project]
+314e13f36eae: Waiting
+597c6c618d36: Waiting
+authentication required - access token has insufficient scopes
+akshay@akshay:~/docker-compose-tasks$ docker push akshay852/project:v1
+The push refers to repository [docker.io/akshay852/project]
+314e13f36eae: Waiting
+597c6c618d36: Waiting
+authentication required - access token has insufficient scopes
+akshay@akshay:~/docker-compose-tasks$ ^C
+akshay@akshay:~/docker-compose-tasks$ docker login -u akshay852
+
+i Info → A Personal Access Token (PAT) can be used instead.
+         To create a PAT, visit https://app.docker.com/settings
+
+
+Password:
+
+WARNING! Your credentials are stored unencrypted in '/home/akshay/.docker/config.json'.
+Configure a credential helper to remove this warning. See
+https://docs.docker.com/go/credential-store/
+
+Login Succeeded
+akshay@akshay:~/docker-compose-tasks$ docker images
+                                                                                                                      i Info →   U  In Use
+IMAGE                  ID             DISK USAGE   CONTENT SIZE   EXTRA
+akshay852/project:v1   c8cf3d32565b        171MB         49.5MB    U
+alpine:latest          28bd5fe8b56d         13MB         3.93MB    U
+busybox:latest         dc2d74b28e4c       6.81MB         2.23MB    U
+debian:12-slim         7b140f374b28        116MB         30.6MB
+nginx:alpine           4a73073bd557       93.6MB           27MB    U
+project:v1             c8cf3d32565b        171MB         49.5MB    U
+ubuntu:24.04           561618e2c15b        119MB         31.7MB    U
+akshay@akshay:~/docker-compose-tasks$ docker push akshay852/project:v1
+The push refers to repository [docker.io/akshay852/project]
+597c6c618d36: Mounted from library/debian
+314e13f36eae: Pushed
+v1: digest: sha256:c8cf3d32565b77eb47f1a4943afd31f8d5224c8dce870e15221dacfa7deb60a6 size: 751
+akshay@akshay:~/docker-compose-tasks$ nano tasks
+
+
+
+VM2
+
+akshay@akshay-VirtualBox:~$ docker login
+
+USING WEB-BASED LOGIN
+
+i Info → To sign in with credentials on the command line, use 'docker login -u <username>'
+
+
+Your one-time device confirmation code is: SLRM-BLSG
+Press ENTER to open your browser or submit your device code here: https://login.docker.com/activate
+
+Waiting for authentication in the browser…
+^Clogin canceled
+akshay@akshay-VirtualBox:~$ docker login -u akshay852
+
+i Info → A Personal Access Token (PAT) can be used instead.
+         To create a PAT, visit https://app.docker.com/settings
+
+
+Password:
+
+WARNING! Your credentials are stored unencrypted in '/home/akshay/.docker/config.json'.
+Configure a credential helper to remove this warning. See
+https://docs.docker.com/go/credential-store/
+
+Login Succeeded
+akshay@akshay-VirtualBox:~$ sudo docker pull akshay852/project:v1
+v1: Pulling from akshay852/project
+314e13f36eae: Pull complete
+597c6c618d36: Pull complete
+Digest: sha256:c8cf3d32565b77eb47f1a4943afd31f8d5224c8dce870e15221dacfa7deb60a6
+Status: Downloaded newer image for akshay852/project:v1
+docker.io/akshay852/project:v1
+akshay@akshay-VirtualBox:~$ sudo docker images
+                                                                                                                      i Info →   U  In Use
+IMAGE                  ID             DISK USAGE   CONTENT SIZE   EXTRA
+akshay852/project:v1   c8cf3d32565b        171MB         49.5MB
+akshay@akshay-VirtualBox:~$ docker exec -it project-test bash
+permission denied while trying to connect to the docker API at unix:///var/run/docker.sock
+akshay@akshay-VirtualBox:~$ sudo docker exec -it project-test bash
+root@8745a22ac1d5:/# id appuser
+ls -R /app
+uid=1000(appuser) gid=1000(appuser) groups=1000(appuser)
+/app:
+data
+
+/app/data:
+index.html
+root@8745a22ac1d5:/# cat /app/data/index.html
+<h1>Welcome to My Project</h1>
+
